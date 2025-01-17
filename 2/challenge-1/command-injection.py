@@ -9,15 +9,23 @@ app = Flask(__name__)
 @app.route("/command1")
 def command_injection1():
     files = request.args.get('files', '')
-    # Don't let files be `; rm -rf /`
-    os.system("ls " + files) # $result=BAD
+    # Use an allowlist of acceptable file names
+    allowed_files = ["file1", "file2", "file3"]
+    if files in allowed_files:
+        os.system("ls " + files)
+    else:
+        return "Invalid file name", 400
 
 
 @app.route("/command2")
 def command_injection2():
     files = request.args.get('files', '')
-    # Don't let files be `; rm -rf /`
-    subprocess.Popen("ls " + files, shell=True) # $result=BAD
+    # Use an allowlist of acceptable file names
+    allowed_files = ["file1", "file2", "file3"]
+    if files in allowed_files:
+        subprocess.Popen("ls " + files, shell=True)
+    else:
+        return "Invalid file name", 400
 
 
 @app.route("/path-exists-not-sanitizer")
@@ -30,5 +38,9 @@ def path_exists_not_sanitizer():
     using the filename `not-there || echo pwned`.
     """
     path = request.args.get('path', '')
-    if os.path.exists(path):
-        os.system("ls " + path) # $result=BAD
+    # Use an allowlist of acceptable paths
+    allowed_paths = ["/path1", "/path2", "/path3"]
+    if path in allowed_paths and os.path.exists(path):
+        os.system("ls " + path)
+    else:
+        return "Invalid path", 400
