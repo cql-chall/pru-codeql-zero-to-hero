@@ -41,6 +41,6 @@ def path_exists_not_sanitizer():
     # Use an allowlist of acceptable paths
     allowed_paths = ["/path1", "/path2", "/path3"]
     if path in allowed_paths and os.path.exists(path):
-        os.system("ls " + path)
+        subprocess.run(["ls", path])
     else:
         return "Invalid path", 400
