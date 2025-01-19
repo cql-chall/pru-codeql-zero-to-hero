@@ -23,7 +23,7 @@ def command_injection2():
     # Use an allowlist of acceptable file names
     allowed_files = ["file1", "file2", "file3"]
     if files in allowed_files:
-        subprocess.Popen("ls " + files, shell=True)
+        subprocess.run(["ls", files])
     else:
         return "Invalid file name", 400
 
