@@ -12,7 +12,7 @@ def command_injection1():
     # Use an allowlist of acceptable file names
     allowed_files = ["file1", "file2", "file3"]
     if files in allowed_files:
-        os.system("ls " + files)
+        subprocess.run(["ls", files])
     else:
         return "Invalid file name", 400
 
